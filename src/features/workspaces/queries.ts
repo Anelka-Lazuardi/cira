@@ -1,30 +1,15 @@
 "use server";
 
 import { DATABASE_ID, MEMBERS_ID, WORKSPACE_ID } from "@/config";
-import { cookies } from "next/headers";
-import { Account, Client, Databases, Query } from "node-appwrite";
-import { AUTH_COOKIE } from "../auth/constants";
-import { getMember } from "../members/utils";
+import { cretaeSessionClient } from "@/lib/appwrite";
+import { Query } from "node-appwrite";
 import { MemberRole } from "../members/type";
+import { getMember } from "../members/utils";
 import { Workspace } from "./type";
 
 export const getWorkspaces = async () => {
     try {
-        const client = new Client()
-            .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
-            .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!)
-
-
-        const session = await cookies().get(AUTH_COOKIE)
-
-        if (!session) return { documents: [], total: 0 }
-
-
-        client.setSession(session.value)
-
-
-        const databases = new Databases(client)
-        const account = new Account(client)
+        const { account, databases } = await cretaeSessionClient();
         const user = await account.get()
 
 
@@ -65,21 +50,8 @@ interface GetWorkspaceProps {
 }
 export const getWorkspace = async ({ workspaceId }: GetWorkspaceProps) => {
     try {
-        const client = new Client()
-            .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
-            .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!)
+        const { account, databases } = await cretaeSessionClient();
 
-
-        const session = await cookies().get(AUTH_COOKIE)
-
-        if (!session) return null
-
-
-        client.setSession(session.value)
-
-
-        const databases = new Databases(client)
-        const account = new Account(client)
         const user = await account.get()
 
 
@@ -97,6 +69,37 @@ export const getWorkspace = async ({ workspaceId }: GetWorkspaceProps) => {
         );
 
         return workspaces
+    } catch {
+        return null
+    }
+
+}
+
+
+interface GetWorkspaceInfoProps {
+    workspaceId: string;
+
+}
+export const getWorkspaceInfo = async ({ workspaceId }: GetWorkspaceInfoProps) => {
+    try {
+        const { databases } = await cretaeSessionClient();
+
+
+
+        const workspaces = await databases.getDocument<Workspace>(
+            DATABASE_ID,
+            WORKSPACE_ID,
+            workspaceId
+        );
+
+        if (!workspaces) {
+            return null
+        }
+
+        return {
+            name: workspaces.name,
+            imageUrl: workspaces?.imageUrl || null
+        }
     } catch {
         return null
     }

@@ -1,16 +1,16 @@
 import { getCurrent } from "@/features/auth/queries";
+import { MemberListForm } from "@/features/workspaces/components/members-list";
 import { redirect } from "next/navigation";
 
-const WorkspaceIdPage = async () => {
+const WorkspcaeIdMembersPage = async () => {
 
     const user = await getCurrent();
-
     if (!user) redirect("/sign-in")
+
+
     return (
-        <div>
-            Workspace Id
-        </div>
+        <MemberListForm />
     );
 }
 
-export default WorkspaceIdPage;
+export default WorkspcaeIdMembersPage;
