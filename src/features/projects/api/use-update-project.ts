@@ -4,12 +4,11 @@ import { InferRequestType, InferResponseType } from 'hono'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
-type ResponseType = InferResponseType<typeof client.api.workspaces[":workspaceId"]["$patch"], 200>
-type RequestType = InferRequestType<typeof client.api.workspaces[":workspaceId"]["$patch"]>
+type ResponseType = InferResponseType<typeof client.api.projects[":projectId"]["$patch"], 200>
+type RequestType = InferRequestType<typeof client.api.projects[":projectId"]["$patch"]>
 
-export const useUpdateeWorkspace = () => {
+export const useUpdateProject = () => {
     const router = useRouter()
-
     const queryClient = useQueryClient();
 
     const mutation = useMutation<
@@ -17,29 +16,27 @@ export const useUpdateeWorkspace = () => {
         Error,
         RequestType>({
             mutationFn: async ({ form, param }) => {
-                const response = await client.api.workspaces[":workspaceId"]["$patch"]({ form, param })
+                const response = await client.api.projects[":projectId"]["$patch"]({ form, param })
 
                 if (!response.ok) {
-                    throw new Error("Failed to update workspace")
+                    throw new Error("Failed to update project")
                 }
-
                 return await response.json()
             },
 
-
             onSuccess: ({ data }) => {
-                toast.success('Workspace updated!')
-                router.refresh();
+                toast.success('Project updated!')
+                router.refresh()
                 queryClient.invalidateQueries({
-                    queryKey: ['workspaces'],
+                    queryKey: ['projects'],
                 })
                 queryClient.invalidateQueries({
-                    queryKey: ['workspace', data.id],
+                    queryKey: ['projects', data.$id],
                 })
             },
 
             onError: () => {
-                toast.error('Failed to create workspace')
+                toast.error('Failed to update project')
             }
         })
 

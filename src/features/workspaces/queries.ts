@@ -8,38 +8,36 @@ import { getMember } from "../members/utils";
 import { Workspace } from "./type";
 
 export const getWorkspaces = async () => {
-    try {
-        const { account, databases } = await cretaeSessionClient();
-        const user = await account.get()
+
+    const { account, databases } = await cretaeSessionClient();
+    const user = await account.get()
 
 
 
-        const members = await databases.listDocuments(
-            DATABASE_ID,
-            MEMBERS_ID,
-            [Query.equal("userId", user.$id)],
-        );
+    const members = await databases.listDocuments(
+        DATABASE_ID,
+        MEMBERS_ID,
+        [Query.equal("userId", user.$id)],
+    );
 
-        if (members.total === 0) {
-            return { documents: [], total: 0 }
+    if (members.total === 0) {
+        return { documents: [], total: 0 }
 
-        }
-
-        const workspaceIds = members.documents.map((member) => member.workspaceId);
-
-        const workspaces = await databases.listDocuments(
-            DATABASE_ID,
-            WORKSPACE_ID,
-            [
-                Query.orderDesc("$createdAt"),
-                Query.contains("$id", workspaceIds)
-            ],
-        );
-
-        return workspaces
-    } catch {
-        return { documents: [], total: 0 };
     }
+
+    const workspaceIds = members.documents.map((member) => member.workspaceId);
+
+    const workspaces = await databases.listDocuments(
+        DATABASE_ID,
+        WORKSPACE_ID,
+        [
+            Query.orderDesc("$createdAt"),
+            Query.contains("$id", workspaceIds)
+        ],
+    );
+
+    return workspaces
+
 
 }
 
@@ -49,29 +47,27 @@ interface GetWorkspaceProps {
 
 }
 export const getWorkspace = async ({ workspaceId }: GetWorkspaceProps) => {
-    try {
-        const { account, databases } = await cretaeSessionClient();
 
-        const user = await account.get()
+    const { account, databases } = await cretaeSessionClient();
+
+    const user = await account.get()
 
 
-        const member = await getMember(
-            { userId: user.$id, workspaceId, databases });
+    const member = await getMember(
+        { userId: user.$id, workspaceId, databases });
 
-        if (!member || member.role !== MemberRole.ADMIN) {
-            return null
-        }
-
-        const workspaces = await databases.getDocument<Workspace>(
-            DATABASE_ID,
-            WORKSPACE_ID,
-            workspaceId
-        );
-
-        return workspaces
-    } catch {
-        return null
+    if (!member || member.role !== MemberRole.ADMIN) {
+        throw new Error("Unauthorized")
     }
+
+    const workspaces = await databases.getDocument<Workspace>(
+        DATABASE_ID,
+        WORKSPACE_ID,
+        workspaceId
+    );
+
+    return workspaces
+
 
 }
 
@@ -81,27 +77,24 @@ interface GetWorkspaceInfoProps {
 
 }
 export const getWorkspaceInfo = async ({ workspaceId }: GetWorkspaceInfoProps) => {
-    try {
-        const { databases } = await cretaeSessionClient();
+
+    const { databases } = await cretaeSessionClient();
 
 
 
-        const workspaces = await databases.getDocument<Workspace>(
-            DATABASE_ID,
-            WORKSPACE_ID,
-            workspaceId
-        );
+    const workspaces = await databases.getDocument<Workspace>(
+        DATABASE_ID,
+        WORKSPACE_ID,
+        workspaceId
+    );
 
-        if (!workspaces) {
-            return null
-        }
-
-        return {
-            name: workspaces.name,
-            imageUrl: workspaces?.imageUrl || null
-        }
-    } catch {
-        return null
+    if (!workspaces) {
+        throw new Error("Workspace not found")
     }
 
+    return {
+        name: workspaces.name,
+        imageUrl: workspaces?.imageUrl || null
+    }
 }
+
