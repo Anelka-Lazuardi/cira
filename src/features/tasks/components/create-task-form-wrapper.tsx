@@ -30,7 +30,7 @@ export const CreateTaskFormWrapper = ({ onCancel }: CreateTaskFormWrapperProps) 
 
     if (isLoading) {
         return (
-            <Card className="w-full h=[741px] border-none shadow-none">
+            <Card className="w-full h-[741px] border-none shadow-none">
                 <CardContent className="flex items-center justify-center h-full">
                     <Loader className="size-5 animate-spin text-muted-foreground" />
                 </CardContent>

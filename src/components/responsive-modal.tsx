@@ -16,7 +16,7 @@ export const ResponsiveModal = ({ children, open, onOpenChange }: ResponsiveMode
     if (isDesktop) {
         return (
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className='w-full sm:max-w-lg p-0 border-none overflow-y-auto hide-scrollbar max-h-[85vh]'>
+                <DialogContent className='w-full sm:max-w-lg p-0 border-none overflow-y-auto hide-scrollbar max-h-[85vh] '>
                     {children}
                 </DialogContent>
             </Dialog>

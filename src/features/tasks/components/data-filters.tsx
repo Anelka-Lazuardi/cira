@@ -11,7 +11,7 @@ interface DataFiltersProps {
     hideProjectFilter?: boolean
 }
 
-export const DataFilters = ({ }: DataFiltersProps) => {
+export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
     const workspaceId = useWorkspaceId()
     const { data: projects, isLoading: isLoadingProjects } = useGetProjects({ workspaceId })
     const { data: members, isLoading: isLoadingMembers } = useGetMembers({ workspaceId })
@@ -100,7 +100,7 @@ export const DataFilters = ({ }: DataFiltersProps) => {
 
             </Select>
 
-            <Select
+            {!hideProjectFilter && (<Select
                 defaultValue={projectId ?? undefined}
                 onValueChange={(value) => { onProjectChange(value) }}
             >
@@ -120,7 +120,9 @@ export const DataFilters = ({ }: DataFiltersProps) => {
                     }
                 </SelectContent>
 
-            </Select>
+            </Select>)
+            }
+
 
             <DatePicker
                 placeholder="Due date"
