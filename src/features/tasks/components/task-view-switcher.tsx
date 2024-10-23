@@ -16,6 +16,7 @@ import { useCallback } from "react";
 import { TaskStatus } from "../type";
 import { useBulkUpdateTask } from "../api/use-bulk-update-task";
 import { DataCalendar } from "./data-calendar";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 
 
 interface TaskViewSwitcherProps {
@@ -39,8 +40,10 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: TaskViewSwitcherProps) =
     const { open } = useCreateTaskModal()
     const { mutate: bulkUpdate } = useBulkUpdateTask()
     const workspaceId = useWorkspaceId()
+    const paramProjectId = useProjectId()
+
     const { data: task, isLoading: isLoadingTasks } = useGetTasks({
-        workspaceId, status, assigneeId, projectId, search, dueDate
+        workspaceId, status, assigneeId, projectId: paramProjectId || projectId, search, dueDate
     });
 
     const onKanbanChange = useCallback((

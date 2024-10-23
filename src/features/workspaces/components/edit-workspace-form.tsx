@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation"
 import { useRef } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { useUpdateeWorkspace } from "../api/use-update-workspace"
+import { useUpdateWorkspace } from "../api/use-update-workspace"
 import { updateWorkspaceSchema } from "../schemas"
 import { Workspace } from "../type"
 import { useConfirm } from "@/hooks/use-confirm"
@@ -29,7 +29,7 @@ interface EditWorkspaceFormProps {
 export const EditWorkspaceForm = ({ onCancel, initialValues }: EditWorkspaceFormProps) => {
     const router = useRouter()
 
-    const { mutate, isPending } = useUpdateeWorkspace()
+    const { mutate, isPending } = useUpdateWorkspace()
     const { mutate: deleteWorkspace, isPending: isDeleting } = useDeleteWorkspace()
     const { mutate: resetInviteCode, isPending: isResetting } = useResetInviteCode()
 
@@ -86,9 +86,6 @@ export const EditWorkspaceForm = ({ onCancel, initialValues }: EditWorkspaceForm
             param: { workspaceId: initialValues.$id }
         }, {
 
-            onSuccess: () => {
-                form.reset();
-            }
         })
     }
 

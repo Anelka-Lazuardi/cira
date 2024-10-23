@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useGetMembers } from "@/features/members/api/use-get-members";
-import { useGetProjects } from "@/features/projects/api/user-get-projects";
+import { useGetProjects } from "@/features/projects/api/use-get-projects";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { FolderIcon, ListCheckIcon, UserIcon } from "lucide-react";
 import { TaskStatus } from "../type";

@@ -6,7 +6,7 @@ import { z } from "zod";
 import { getMember } from "../utils";
 import { DATABASE_ID, MEMBERS_ID } from "@/config";
 import { Query } from "node-appwrite";
-import { MemberRole } from "../type";
+import { Member, MemberRole } from "../type";
 
 
 const app = new Hono()
@@ -33,7 +33,7 @@ const app = new Hono()
                 return c.json({ error: "Unauthorized" }, 401)
             }
 
-            const members = await databases.listDocuments(
+            const members = await databases.listDocuments<Member>(
                 DATABASE_ID,
                 MEMBERS_ID,
                 [
