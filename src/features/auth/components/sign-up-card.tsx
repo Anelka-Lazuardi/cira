@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { registerSchema } from "../schemas";
 import { useRegister } from "../api/use-register";
+import { signUpWithGithub, signUpWithGoogle } from "@/lib/oauth";
 
 
 
@@ -125,7 +126,9 @@ export const SignUpCard = () => {
                     disabled={isPending}
                     variant={"secondary"}
                     size={"lg"}
-                    className="w-full">
+                    className="w-full"
+                    onClick={() => signUpWithGoogle()}
+                >
                     <FcGoogle className="mr-2 size-5" />
                     Login with Google
                 </Button>
@@ -133,7 +136,9 @@ export const SignUpCard = () => {
                     disabled={isPending}
                     variant={"secondary"}
                     size={"lg"}
-                    className="w-full">
+                    className="w-full"
+                    onClick={() => signUpWithGithub()}
+                >
                     <FaGithub className="mr-2 size-5" />
                     Login with Github
                 </Button>
